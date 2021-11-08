@@ -3,16 +3,16 @@ package data
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"questionsanswers/pkg/model"
 
 	"github.com/go-kit/kit/log"
 	_ "github.com/go-sql-driver/mysql"
 	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
-	var RepoErr = errors.New("Unable to handle Repo Request")
+
 	const QuestionCollection = "Questions"
 	const AnswerCollection = "Answers"
 
@@ -62,124 +62,92 @@ import (
 
 	func (repo *mongorepo) GetAllQuestion(ctx context.Context) ([]model.Question, error) {
 		fmt.Println("All question mongo repo", repo.db)
-
-		/*var question model.QuestionMongo
-		var questions []model.Question
-		var quer model.Question
-	
-		cursor, err:= repo.db.C(QuestionCollection).Find(ctx,bson.D{{}})
-	
-		if err != nil {
-			fmt.Println("Error occured inside GetAllQuestion in repo")
-		}
-
-		for cursor.Next(ctx) {
-			err := cursor.Decode(&question)
-			if err != nil {
-				return []model.Question{
-					model.Question{
-						Subject:"Error", 
-						Description: "Error",
-						},
-				}, err
-			}			
-			
-			quer = model.Question{			
-				Subject: question.Subject,
-				Description: question.Description,
-			}
-			questions = append(questions, quer)
-		}
 		
-		return questions, nil*/
-		return nil, nil
+		var questions []model.Question		
+
+		err := repo.db.C(QuestionCollection).Find(ctx).All(&questions)
+		if err != nil {
+			panic(err)
+		} else {
+			fmt.Println("Results All: ", questions) 
+		}
+			
+		return questions, nil
+		
 	}
 
 
 
 	func (repo *mongorepo) GetAllQuestionsByUser(ctx context.Context, idUser int) ([]model.Question, error) {
-		/*fmt.Println("All GetAllQuestionsByUser mongo repo", repo.db)
-	
-
-		questions,err:= repo.db.C(QuestionCollection).Find(ctx,bson.D{"_id": &idUser})
-
-		var results []bson.M   
+		fmt.Println("GetAllQuestionsByUser repo", repo.db)
 		
-		if err = questions.All(ctx,&results);err!=nil {
-			log.Fatal(err)			} */
-		
-		return nil, nil
+		var questions []model.Question		
+
+		err := repo.db.C(QuestionCollection).Find(bson.M{"_id":idUser}).All(&questions)
+		if err != nil {
+			panic(err)
+		} else {
+			fmt.Println("Results All: ", questions) 
+		}
+			
+		return questions, nil
 	}
 
 	
 
 
 	func (repo *mongorepo) GetQuestionByID(ctx context.Context, id int) (model.Question, error) {
-		/*fmt.Println("All GetAllQuestionsByUser mongo repo", repo.db)
-
-		questions,err:= repo.db.C(QuestionCollection).findOne(ctx,bson.M{"_id": &id})
-		var results bson.M   
+		fmt.Println(" GetQuestionByID mongo repo", repo.db)
 		
-		if err = questions.All(ctx,&results);err!=nil {
-			log.Fatal(err)			
-		} 
+		var question model.Question
+		result:= repo.db.C(QuestionCollection).Find(bson.M{"_id": id}).All(&question)
 		
-		*/
-
-		var quer = model.Question{			
-			Subject: "JJJJJJJ",
-			Description: "quer",
+		if result!=nil {
+			fmt.Println("NO QUESTION : ")
+			panic(result)
 		}
-		return quer, nil
+
+		return question, nil
 	}
 
 
 	func (repo *mongorepo) UpdateQuestion(ctx context.Context, answer model.Answer) (int, error) {
-		/*fmt.Println("UpdateQuestion mongo repo", repo.db)
 		
-		update := bson.M{"$set": bson.M{"_id": &answer.IDQuestion}}
-		result, err := repo.db.C(AnswerCollection).FindOne.UpdateOne(
-			context.Background(),
-			update,
-		)
-		if err != nil {
-			log.Fatal("Update Question fail %v\n", err)
-			
-		}	*/
-		//return result.UpsertedID , err
+		var ans model.Answer
+		result:= repo.db.C(AnswerCollection).Find(bson.M{"id_question": answer.IDQuestion}).One(&ans)
+		
+		if result!=nil { // No ANSWER INSERTED BEFORE
+			err1 := repo.db.C(AnswerCollection).Insert(ctx,answer)
+			if err1 != nil{
+				panic(err1)
+			}
 
-		return -1, nil
+		}else{		
+			colQuerier := bson.M{"id_question": answer.IDQuestion}
+			change := bson.M{"$set": bson.M{"description": answer.Description}}
+			err := repo.db.C(AnswerCollection).Update(colQuerier, change)
+			if err != nil {
+				panic(err)
+			}
+	}
+		return int(answer.IDQuestion), nil
+				
 	}
 
 
 	func (repo *mongorepo) DeleteQuestion(ctx context.Context, answer model.Answer) (int, error) {
 		fmt.Println("DeleteQuestion mongo repo", repo.db)
 		
-	/*	err := repo.db.C(AnswerCollection).Remove(bson.M{"_id": &answer.idAnswer})
+		err := repo.db.C(AnswerCollection).Remove(bson.M{"_id": &answer.IDAnswer})
 		if err != nil {
-			log.Fatal("Remove Answer fail %v\n", err)
+			panic(err)
 			
 		}
-
-		errQ := repo.db.C(QuestionCollection).Remove(bson.M{"_id": &answer.idQuestion})
+		errQ := repo.db.C(QuestionCollection).Remove(bson.M{"_id": &answer.IDAnswer})
 		if errQ != nil {
-			log.Fatal("Remove Question fail %v\n", errQ)
-			
-		}*/
-		return -1, nil
-		//return errQ.DeletedCount ,err
+			panic(errQ)
+		}
+		
+		return int(answer.IDQuestion) ,err
 	}
 
-	/*OPTIONAL SQL*/
-/*
-	func (repo *sqlrepo) CreateQuestion(ctx context.Context, question service.Question) error {
-			
-			fmt.Println("create Question sql repo", sqldb),
-			dbt:= sqlrepo.sqldb
-			sqlresp, err := dbt.Prepare("INSERT INTO Question (userid,subject,description) VALUES (?,?,?)")
-			sqlresp.Exec(question.idUser, question.subject, question.description)
-			fmt.Println("Question SQL Created:", sqlresp, err)
-			return nil
-	}
-
-	*/

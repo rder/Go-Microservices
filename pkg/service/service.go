@@ -5,7 +5,7 @@ import (
 	"questionsanswers/pkg/model"
 )
 
-type Srv interface {
+type Service interface {
 	GetAllQuestions(ctx context.Context) ([]model.Question, error)
 	GetAllQuestionsByUser(ctx context.Context, id int) ([]model.Question, error)
 	CreateQuestion(ctx context.Context, q model.Question) (int, error)
