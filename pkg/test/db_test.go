@@ -18,7 +18,7 @@ func TestCreateQuestion(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:1,Subject:"",Description:""} }, []model.Question{ model.Question{ID:3,Subject:"",Description:""}}},
+        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:3,Subject:"BB",Description:"QQ"}}},
 		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:4,Subject:"A",Description:"B"}}},
     }
 
@@ -37,6 +37,7 @@ func TestCreateQuestion(t *testing.T){
 			}
 			for index, zz := range tt.questions{
 			
+				fmt.Println("Question",  zz)
 				result := mongodb.CreateQuestion(ctx,zz)
 
 				if result == nil {
