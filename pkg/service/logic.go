@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"questionsanswers/pkg/data"
 	"questionsanswers/pkg/model"
 
@@ -42,13 +41,13 @@ func (s srv) CreateQuestion (ctx context.Context, question model.Question) (erro
 
 }
 
-func (s srv) UpdateQuestion (ctx context.Context, answer model.Answer) (int,error){
+func (s srv) UpdateQuestion (ctx context.Context, answer model.Question) (int,error){
 
 	return s.repository.UpdateQuestion(ctx,answer)
 
 }
 
-func (s srv) DeleteQuestion (ctx context.Context, answer model.Answer) (int,error){
+func (s srv) DeleteQuestion (ctx context.Context, answer model.Question) (int,error){
 
 	return s.repository.DeleteQuestion(ctx,answer)
 

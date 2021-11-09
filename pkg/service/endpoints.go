@@ -71,7 +71,7 @@ func makeGetQuestionByIDEndpoint (s Service) endpoint.Endpoint{
 func makeUpdateQuestionEndpoint (s Service) endpoint.Endpoint{
 	return func(ctx context.Context,request interface{})(interface{},error){
 		req := request.(model.CreateAnswerRequest)
-		q,_:= s.UpdateQuestion(ctx,model.Answer{IDQuestion:req.IDquestion,Description:req.Description})
+		q,_:= s.UpdateQuestion(ctx,model.Question{ID:req.IDquestion,Description:req.Description})
 		return q,nil
 	}
 
@@ -80,7 +80,7 @@ func makeUpdateQuestionEndpoint (s Service) endpoint.Endpoint{
 func makeDeleteQuestionEndpoint (s Service) endpoint.Endpoint{
 	return func(ctx context.Context,request interface{})(interface{},error){
 		req := request.(model.CreateAnswerRequest)
-		q,_:= s.DeleteQuestion(ctx,model.Answer{IDQuestion:req.IDquestion,Description:req.Description})
+		q,_:= s.DeleteQuestion(ctx,model.Question{ID:req.IDquestion,Description:req.Description})
 
 		return q,nil
 	}
