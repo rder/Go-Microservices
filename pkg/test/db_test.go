@@ -11,6 +11,7 @@ import(
 )
 
 
+/*
 func TestCreateQuestion(t *testing.T){
 
 	var tests = []struct {
@@ -18,8 +19,8 @@ func TestCreateQuestion(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:3,Subject:"BB",Description:"QQ"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:4,Subject:"A",Description:"B"}}},
+        { 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"}}},
+		{ 3, 4,[]model.Question{model.Question{ID:14,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:14,IDUser:2,Subject:"A",Description:"B"}}},
     }
 
 	for _, tt := range tests{
@@ -41,12 +42,8 @@ func TestCreateQuestion(t *testing.T){
 				result := mongodb.CreateQuestion(ctx,zz)
 
 				if result == nil {
-					results,err:= mongodb.GetQuestionByID(ctx,int(zz.ID))
-					if err!=nil{
-						
-						fmt.Println("GetQuestionByID mongo repo",  tt.questions, tt.want)
-					}
-					if !(reflect.DeepEqual(results, tt.want[index])) {
+					
+					if !(reflect.DeepEqual(zz, tt.want[index])) {
 						fmt.Println("NOT EQUAL mongo repo",  tt.questions, tt.want)
 					}else{
 						t.Logf("Success OK!")
@@ -55,155 +52,287 @@ func TestCreateQuestion(t *testing.T){
 
 				}
 
-			}            
-			
-        })
-    }  
+			}
 
+
+        })
+    }
+}*/
+
+func TestGetQuestionByID(t *testing.T){
+
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"}}},
+		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"}}},
+    }
+
+	for _, tt := range tests{
+        testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
+        t.Run(testname, func(t *testing.T){      
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()			
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error occured inside GetQuestionByID in repo")
+			}
+			for index, zz := range tt.questions{
+			
+				fmt.Println("Question",  zz)
+				result,err := mongodb.GetQuestionByID(ctx,int(zz.ID))
+				
+				if err != nil{						
+						fmt.Println("GetQuestionByID ERROR repo",  tt.questions, tt.want)
+					}					
+					if !(reflect.DeepEqual(result, tt.want[index])) {
+						fmt.Println("NOT EQUAL mongo repo", result, tt.want)
+					}else{
+						t.Logf("Success OK!")
+					}
+				}
+        })
+	}
 }
+
 /*
 
-func TestGetAllQuestions(t *testing.T ){
-	
+func TestDeleteQuestion(t *testing.T ){
 
-	results := data.GetAllQuestion()	
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ }},
+		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ }},
+    }
 
-	var want = []model.Question{
-		model.Question {
-			IDQuestion: 1, 
-			Subject:"Maths", 
-			Description: "Algorithms",
-		},
-		model.Question {
-			IDQuestion: 2, 
-			Subject:"Maths 2", 
-			Description: "Algorithms 2", 
-		},
-	}
-
-
-	for _, tt := range tests {
+	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
         t.Run(testname, func(t *testing.T) {      
-            if !Equal(results, tt.want) {
-                t.Errorf("got %d, want %d", results, tt.want)
-            }else{
-				t.Logf("Success OK!")
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()
+			
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error occured inside CreateQuestion in repo")
+			}
+			for index, zz := range tt.questions{
+			
+				fmt.Println("Question",  zz)
+				result ,err2:= mongodb.DeleteQuestion(ctx,int(zz.ID))
+
+				if err2 != nil {
+					//results,err:= mongodb.GetQuestionByID(ctx,int(zz.ID))
+					if err!=nil{
+						
+						fmt.Println("GetQuestionByID NO ERROR repo",  tt.questions, tt.want)
+					}
+					if !(reflect.DeepEqual(result, tt.want[index])) {
+						fmt.Println("NOT EQUAL mongo repo",  tt.questions, tt.want)
+					}else{
+						t.Logf("Success OK!")
+					}
+
+
+				}
+
+			}
+
+
+        })
+    } 
+
+}*/
+
+func TestGetAllQuestion(t *testing.T){
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:1,Subject:"AA",Description:"DD"}}},
+		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:3,Subject:"A",Description:"B"}}},
+    }
+
+	for _, tt := range tests{
+        testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
+        t.Run(testname, func(t *testing.T) {      
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()
+			
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error occured inside CreateQuestion in repo")
 			}
 			
-        })
-    }  
+			result,err := mongodb.GetAllQuestion(ctx)
+
+			if err != nil {
+				fmt.Println("ERROR",  err)
 	
+			}		
+			if !(reflect.DeepEqual(result, tt.want)) {
+				fmt.Println("NOT EQUAL mongo repo",  result, tt.want)
+			}else{
+				t.Logf("Success OK!")
+			}			
+
+		})				
+    
+    }  
+			
 }
 
 
-func TestGetAllQuestionsByUser(t *testing.T) {
-	results := data.GetAllQuestionsByUserMongo(1)	
+func TestGetAllQuestionsByUser(t *testing.T){
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"}}},
+		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"}}},
+    }
 
-	var want = []Question{
-		Question {
-			IdUser: 1, 
-			Subject:"Maths", 
-			Description: "Algorithms",
-		},		
-	}
 
-	for _, tt := range tests {
+	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
         t.Run(testname, func(t *testing.T) {      
-            if !Equal(results, tt.want) {
-                t.Errorf("got %d, want %d", results, tt.want)
-            }else{
-				t.Logf("Success OK!")
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()
+			
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error GetAllQuestionsByUser in repo",err)
 			}
 			
-        })
-    }  
+			result,err := mongodb.GetAllQuestionsByUser(ctx,2)
+
+			if err != nil {
+				fmt.Println("ERROR",  err)
 	
+			}		
+			if !(reflect.DeepEqual(result, tt.want)) {
+				fmt.Println("NOT EQUAL mongo repo",  result, tt.want)
+			}else{
+				t.Logf("Success OK!")
+			}			
+
+		})				
+    
+    }  
+			
 }
 
 
-func TestGetAllQuestionsByUser(t *testing.T) {
-	results := data.CreateQuestionMongo()	
+func TestUpdateQuestion(t *testing.T){
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:11,Subject:"AA",Description:"DDR",Answer:"KK"} }, []model.Question{ model.Question{ID:11,Subject:"AA",Description:"DD",Answer:"KK"}}},
+		{ 3, 4,[]model.Question{model.Question{ID:13,Subject:"A",Description:"B",Answer:"LL"} }, []model.Question{ model.Question{ID:13,Subject:"A",Description:"B",Answer:"LL"}}},
+    }
 
-	var want = []Question{
-		Question {
-			IdUser: 1, 
-			Subject:"Maths", 
-			Description: "Algorithms",
-		},		
-	}
-
-	for _, tt := range tests {
+	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
         t.Run(testname, func(t *testing.T) {      
-            if !Equal(results, tt.want) {
-                t.Errorf("got %d, want %d", results, tt.want)
-            }else{
-				t.Logf("Success OK!")
-			}
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()
 			
-        })
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error occured inside UpdateQuestion in repo")
+			}
+		
+
+			for index, zz := range tt.questions{
+			
+				fmt.Println("ANSWER",  zz)
+				result,err := mongodb.UpdateQuestion(ctx,zz)
+				resultI,errI := mongodb.GetQuestionByID(ctx,int(zz.ID))
+
+				if err == nil && errI!=nil{	
+
+					if !(reflect.DeepEqual(resultI, tt.want[index])) {
+						fmt.Println("UPDATE",  result, tt.want)
+						fmt.Println("NOT EQUAL mongo repo",  resultI, tt.want)
+					}else{
+						t.Logf("Success OK!")
+					}
+				}
+			}	
+
+		})			
+    
     }  
-	
+			
 }
+
+
 
 
 func TestDeleteQuestion(t *testing.T) {
-	results := data.DeleteQuestionMongo(2)	
+	var tests = []struct {
+        a, b int
+		questions []model.Question
+        want []model.Question
+    }{
+        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} },[]model.Question{} },
+		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{} } ,
+    }
 
-	var want = []Question{
-		Question {
-			IdUser: 1, 
-			Subject:"Maths", 
-			Description: "Algorithms",
-		},		
-	}
 
-	for _, tt := range tests {
+	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
         t.Run(testname, func(t *testing.T) {      
-            if !Equal(results, tt.want) {
-                t.Errorf("got %d, want %d", results, tt.want)
-            }else{
-				t.Logf("Success OK!")
+		
+			db:= data.GetMongoDB()
+			ctx := context.Background()
+			
+								
+			mongodb ,err:=data.NewRepo(db,nil)
+		
+			if err !=nil{
+				fmt.Println("Error GetAllQuestionsByUser in repo",err)
 			}
 			
-        })
-    }  
+			result,err := mongodb.GetQuestionByID(ctx,0)
+			resultD,errD:= mongodb.DeleteQuestion(ctx,result)
+
+			if errD != nil {
+				fmt.Println("ERROR",  err)
 	
-}
-
-func TestGetUpdateQuestion(t *testing.T) {
-
-	answer:= Answer{			
-			IDQuestion : 1 ,
-			Description : "Algorithm 3", 		
-	}
-
-   
-	results := data.UpdateQuestionMongo(answer)	
-
-	var want = []Question{
-		Question {
-			IdUser: 1, 
-			Subject:"Maths", 
-			Description: "Algorithm 3",
-		},		
-	}
-
-	for _, tt := range tests {
-        testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
-        t.Run(testname, func(t *testing.T) {      
-            if !Equal(results, tt.want) {
-                t.Errorf("got %d, want %d", results, tt.want)
-            }else{
+			}		
+			if errD==nil{
+				fmt.Println("Error DeleteQuestion in repo",resultD)	
+			}else{
 				t.Logf("Success OK!")
-			}
-			
-        })
+			}	
+
+		})    
     }  
-	
 }
 
-*/
+
+
