@@ -11,7 +11,7 @@ import(
 )
 
 
-/*
+
 func TestCreateQuestion(t *testing.T){
 
 	var tests = []struct {
@@ -20,8 +20,8 @@ func TestCreateQuestion(t *testing.T){
         want []model.Question
     }{
         { 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:14,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:14,IDUser:2,Subject:"A",Description:"B"}}},
-    }
+
+	}
 
 	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
@@ -57,7 +57,7 @@ func TestCreateQuestion(t *testing.T){
 
         })
     }
-}*/
+}
 
 func TestGetQuestionByID(t *testing.T){
 
@@ -66,9 +66,8 @@ func TestGetQuestionByID(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"}}},
-    }
+		{ 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"}}},
+	}
 
 	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
@@ -100,59 +99,6 @@ func TestGetQuestionByID(t *testing.T){
 	}
 }
 
-/*
-
-func TestDeleteQuestion(t *testing.T ){
-
-	var tests = []struct {
-        a, b int
-		questions []model.Question
-        want []model.Question
-    }{
-        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ }},
-		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ }},
-    }
-
-	for _, tt := range tests{
-        testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
-        t.Run(testname, func(t *testing.T) {      
-		
-			db:= data.GetMongoDB()
-			ctx := context.Background()
-			
-								
-			mongodb ,err:=data.NewRepo(db,nil)
-		
-			if err !=nil{
-				fmt.Println("Error occured inside CreateQuestion in repo")
-			}
-			for index, zz := range tt.questions{
-			
-				fmt.Println("Question",  zz)
-				result ,err2:= mongodb.DeleteQuestion(ctx,int(zz.ID))
-
-				if err2 != nil {
-					//results,err:= mongodb.GetQuestionByID(ctx,int(zz.ID))
-					if err!=nil{
-						
-						fmt.Println("GetQuestionByID NO ERROR repo",  tt.questions, tt.want)
-					}
-					if !(reflect.DeepEqual(result, tt.want[index])) {
-						fmt.Println("NOT EQUAL mongo repo",  tt.questions, tt.want)
-					}else{
-						t.Logf("Success OK!")
-					}
-
-
-				}
-
-			}
-
-
-        })
-    } 
-
-}*/
 
 func TestGetAllQuestion(t *testing.T){
 	var tests = []struct {
@@ -160,8 +106,7 @@ func TestGetAllQuestion(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:1,Subject:"AA",Description:"DD"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:3,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:3,Subject:"A",Description:"B"}}},
+		{ 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"}}},
     }
 
 	for _, tt := range tests{
@@ -203,8 +148,7 @@ func TestGetAllQuestionsByUser(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{ model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"}}},
+		{ 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD"}}},
     }
 
 
@@ -247,9 +191,9 @@ func TestUpdateQuestion(t *testing.T){
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:11,Subject:"AA",Description:"DDR",Answer:"KK"} }, []model.Question{ model.Question{ID:11,Subject:"AA",Description:"DD",Answer:"KK"}}},
-		{ 3, 4,[]model.Question{model.Question{ID:13,Subject:"A",Description:"B",Answer:"LL"} }, []model.Question{ model.Question{ID:13,Subject:"A",Description:"B",Answer:"LL"}}},
-    }
+		{ 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD",Answer:"JH"} }, []model.Question{ model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD",Answer:"JH"}}},
+		
+	}
 
 	for _, tt := range tests{
         testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
@@ -298,9 +242,11 @@ func TestDeleteQuestion(t *testing.T) {
 		questions []model.Question
         want []model.Question
     }{
-        { 1, 2, []model.Question{model.Question{ID:11,IDUser:1,Subject:"AA",Description:"DD"} },[]model.Question{} },
-		{ 3, 4,[]model.Question{model.Question{ID:12,IDUser:2,Subject:"A",Description:"B"} }, []model.Question{} } ,
-    }
+     	{ 1, 2, []model.Question{model.Question{ID:13,IDUser:1,Subject:"AA",Description:"DD",Answer:"JH"} }, []model.Question{} },
+		
+	
+	
+	}
 
 
 	for _, tt := range tests{
@@ -317,7 +263,7 @@ func TestDeleteQuestion(t *testing.T) {
 				fmt.Println("Error GetAllQuestionsByUser in repo",err)
 			}
 			
-			result,err := mongodb.GetQuestionByID(ctx,0)
+			result,err := mongodb.GetQuestionByID(ctx,13)
 			resultD,errD:= mongodb.DeleteQuestion(ctx,result)
 
 			if errD != nil {
@@ -329,7 +275,8 @@ func TestDeleteQuestion(t *testing.T) {
 			}else{
 				t.Logf("Success OK!")
 			}	
-
+			//Last Test remove the DB just in case to restart the tests
+			db.C("Questions").RemoveAll(nil)
 		})    
     }  
 }
