@@ -22,6 +22,7 @@ func GetMongoDB() *mgo.Database {
 	os.Exit(2)
 }
 	db = session.DB(dbName)
+	
 	return db
 }
 
